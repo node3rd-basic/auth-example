@@ -1,7 +1,10 @@
 const express = require("express")
 const cors = require("cors")
+const CryptoJS = require("crypto-js");
 const app = express()
 const port = 3000
+
+const secretKey = "secret key 123"
 
 var corsOptions = {
     origin: 'http://localhost:63342',
@@ -32,12 +35,15 @@ app.post("/sign-in", (req, res) => {
         return res.status(401).json({msg: "사용자를 찾지 못했습니다."})
     }
 
-    res.json({ msg: "okay", data: { token: user.id }} )
+    const ciphertext = CryptoJS.AES.encrypt(`${user.id}`, secretKey).toString();
+    res.json({ msg: "okay", data: { token:  ciphertext}} )
 })
 
 app.get("/users/me", (req, res) => {
     const { authorization: token } = req.headers
-    const user = users.find((user) => `${user.id}` === token)
+    const bytes  = CryptoJS.AES.decrypt(token, secretKey);
+    const userId = bytes.toString(CryptoJS.enc.Utf8);
+    const user = users.find((user) => `${user.id}` === userId)
     if (!user) {
         return res.status(401).json({msg: "권한이 없습니다."})
     }
