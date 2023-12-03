@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My profile page</title>
+    <style>
+        label {
+            display: inline-block;
+            width: 80px;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Profile</h1>
+    <div><label>이름</label><span id="name"></span></div>
+    <div><label>이메일</label><span id="email"></span></div>
+    <div><button>로그아웃</button></div>
+
+</body>
+</html>
+
+<script>
+    function getCookieValue(name) {
+        const regex = new RegExp(`(^| )${name}=([^;]+)`)
+        const match = document.cookie.match(regex)
+        if (match) {
+            return match[2]
+        }
+    }
+
+    function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function logout() {
+        setCookie("token", "", 0)
+        location.href = "signin.html"
+    }
+
+    function innerUserInfo(user) {
+        document.getElementById("name").innerText = user.name
+        document.getElementById("email").innerText = user.email
+    }
+
+    document.addEventListener("DOMContentLoaded", async function() {
+        const res = await fetch("http://localhost:3000/users/me", {
+            method: "get",
+        })
+        const user = await res.json()
+        innerUserInfo(user)
+    });
+
+</script>
