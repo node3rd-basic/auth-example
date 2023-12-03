@@ -1,6 +1,6 @@
 const express = require("express")
 const cors = require("cors")
-const CryptoJS = require("crypto-js");
+const jwt = require('jsonwebtoken');
 const app = express()
 const port = 3000
 
@@ -41,16 +41,18 @@ app.post("/sign-in", (req, res) => {
         email: user.email
     }
 
-    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(userInfo), secretKey).toString();
-    res.json({ msg: "okay", data: { token:  ciphertext}} )
+    const jwtToken = jwt.sign(userInfo, secretKey);
+    res.json({ msg: "okay", data: { token:  jwtToken}} )
 })
 
 app.get("/users/me", (req, res) => {
     const { authorization: token } = req.headers
-    const bytes  = CryptoJS.AES.decrypt(token, secretKey);
-    const userString = bytes.toString(CryptoJS.enc.Utf8);
-    const user = JSON.parse(userString)
-    res.json(user)
+    try {
+        const user = jwt.verify(token, secretKey)
+        res.json(user)
+    } catch {
+        res.status(401).json({ msg: "권한이 없습니다." })
+    }
 })
 
 app.listen(port, () => {
