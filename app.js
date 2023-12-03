@@ -35,22 +35,22 @@ app.post("/sign-in", (req, res) => {
         return res.status(401).json({msg: "사용자를 찾지 못했습니다."})
     }
 
-    const ciphertext = CryptoJS.AES.encrypt(`${user.id}`, secretKey).toString();
+    const userInfo = {
+        id: user.id,
+        name: user.name,
+        email: user.email
+    }
+
+    const ciphertext = CryptoJS.AES.encrypt(JSON.stringify(userInfo), secretKey).toString();
     res.json({ msg: "okay", data: { token:  ciphertext}} )
 })
 
 app.get("/users/me", (req, res) => {
     const { authorization: token } = req.headers
     const bytes  = CryptoJS.AES.decrypt(token, secretKey);
-    const userId = bytes.toString(CryptoJS.enc.Utf8);
-    const user = users.find((user) => `${user.id}` === userId)
-    if (!user) {
-        return res.status(401).json({msg: "권한이 없습니다."})
-    }
-    res.json({
-        name: user.name,
-        email : user.email,
-    })
+    const userString = bytes.toString(CryptoJS.enc.Utf8);
+    const user = JSON.parse(userString)
+    res.json(user)
 })
 
 app.listen(port, () => {
