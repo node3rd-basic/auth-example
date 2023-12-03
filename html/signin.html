@@ -34,12 +34,12 @@
         e.preventDefault()
         const res = await fetch("http://localhost:3000/sign-in", {
             method: "post",
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 email: this.email.value,
                 password: this.password.value
             })
         })
         const data = await res.json()
-        set
     })
 </script>
