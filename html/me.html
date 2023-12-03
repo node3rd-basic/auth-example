@@ -17,12 +17,18 @@
     <h1>My Profile</h1>
     <div><label>이름</label><span id="name"></span></div>
     <div><label>이메일</label><span id="email"></span></div>
-    <div><button>로그아웃</button></div>
+    <div><button id="signout">로그아웃</button></div>
 
 </body>
 </html>
 
 <script>
+    const token = getCookieValue("token")
+    if (!token) {
+        alert("로그인 해 주세요")
+        location.href = "signin.html"
+    }
+
     function getCookieValue(name) {
         const regex = new RegExp(`(^| )${name}=([^;]+)`)
         const match = document.cookie.match(regex)
@@ -51,9 +57,14 @@
     document.addEventListener("DOMContentLoaded", async function() {
         const res = await fetch("http://localhost:3000/users/me", {
             method: "get",
+            credentials: 'include',
         })
         const user = await res.json()
         innerUserInfo(user)
     });
+
+    document.getElementById("signout").addEventListener("click", () => {
+        logout()
+    })
 
 </script>

@@ -35,11 +35,16 @@
         const res = await fetch("http://localhost:3000/sign-in", {
             method: "post",
             headers: {"Content-Type": "application/json"},
+            credentials: 'include',
             body: JSON.stringify({
                 email: this.email.value,
                 password: this.password.value
             })
         })
-        const data = await res.json()
+        if (!res.ok) {
+            alert("회원 정보를 확인 해 보세요.")
+            return
+        }
+        location.href = "me.html"
     })
 </script>
