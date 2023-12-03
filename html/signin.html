@@ -19,15 +19,17 @@
     <h1>SIGN IN</h1>
     <div><label>이메일 </label> <input type="text" name="email"/></div>
     <div><label>비밀번호 </label> <input type="password" name="password"/></div>
-    <div><button>로그인</button</div>
+    <div><button>로그인</button></div>
 </form>
 </body>
 </html>
 
 <script>
-    function logout() {
-        setCookie("token", "", 0)
-        location.href = "signin.html"
+    function setCookie(cname, cvalue, exdays) {
+        const d = new Date();
+        d.setTime(d.getTime() + (exdays*24*60*60*1000));
+        let expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     }
 
     document.forms[0].addEventListener("submit", async function(e) {
@@ -45,6 +47,10 @@
             alert("회원 정보를 확인 해 보세요.")
             return
         }
+
+        const result = await res.json()
+        setCookie("token", result.data.token, 3600)
+
         location.href = "me.html"
     })
 </script>

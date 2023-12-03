@@ -57,7 +57,10 @@
     document.addEventListener("DOMContentLoaded", async function() {
         const res = await fetch("http://localhost:3000/users/me", {
             method: "get",
-            credentials: 'include',
+            headers: {
+                "Content-type": "application/json",
+                "Authorization": getCookieValue("token"),
+            }
         })
         const user = await res.json()
         innerUserInfo(user)
