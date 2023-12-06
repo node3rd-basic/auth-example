@@ -41,6 +41,11 @@ app.post("/sign-in", (req, res) => {
     res.json({ msg: "okay"} )
 })
 
+app.post("/sign-out", (req, res) => {
+    res.cookie("token", "")
+    res.json({ msg: "okay"} )
+})
+
 app.get("/users/me", (req, res) => {
     const { token } = req.cookies
     const user = users.find((user) => `${user.id}` === token)
