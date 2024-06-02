@@ -38,8 +38,13 @@
         document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     }
 
-    function logout() {
+    async function logout() {
         setCookie("token", "", 0)
+        const res = await fetch("http://localhost:3000/sign-out", {
+            method: "post",
+            credentials: 'include',
+        })
+        await res.json()
         location.href = "signin.html"
     }
 
@@ -51,9 +56,12 @@
     document.addEventListener("DOMContentLoaded", async function() {
         const res = await fetch("http://localhost:3000/users/me", {
             method: "get",
+            credentials: 'include',
         })
         const user = await res.json()
         innerUserInfo(user)
     });
+
+    document.querySelector("button").addEventListener("click", logout)
 
 </script>
