@@ -21,6 +21,20 @@ const users = [
     }
 ]
 
+app.get("/order/:desk", (req, res) => {
+    console.log("Request Header: ", req.headers)
+    // console.log("Request Header: ", req.headers.cookie)
+    console.log("Request path param: ", req.params)
+    console.log("Request querystring: ", req.query)
+    console.log("Request req body", req.body)
+    // console.log("Request Header: ", req)
+
+    res.cookie("desk", req.params.desk)
+    res.json({
+        msg: "주문 완료"
+    })
+})
+
 app.post("/sign-in", (req, res) => {
     const { email, password } = req.body
     const user = users.find((user) => user.email === email && user.password === password)
