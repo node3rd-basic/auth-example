@@ -1,4 +1,6 @@
 # 브랜치 순서
+## 0. feature/session-auth
+세션을 통한 인증 구현
 ## 1. feature/cookie-auth
 쿠키를 통한 인증 구현
 ## 2. feature/nocookie-auth
